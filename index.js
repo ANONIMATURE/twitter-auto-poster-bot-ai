@@ -1,8 +1,9 @@
+// By VishwaGauravIn (https://itsvg.in)
+
 const GenAI = require("@google/generative-ai");
 const { TwitterApi } = require("twitter-api-v2");
 const SECRETS = require("./SECRETS");
 
-// Konfiguracja klienta Twitter API
 const twitterClient = new TwitterApi({
   appKey: SECRETS.APP_KEY,
   appSecret: SECRETS.APP_SECRET,
@@ -10,54 +11,54 @@ const twitterClient = new TwitterApi({
   accessSecret: SECRETS.ACCESS_SECRET,
 });
 
-// Konfiguracja Google Generative AI
 const generationConfig = {
-  maxOutputTokens: 280, // Limit znaków na tweeta
+  maxOutputTokens: 400,
 };
 const genAI = new GenAI.GoogleGenerativeAI(SECRETS.GEMINI_API_KEY);
 
-// Funkcja do pobierania popularnych hashtagów w Polsce
-async function getTrendingHashtags() {
-  try {
-    const trends = await twitterClient.v1.trendsByPlace(23424923); // WOEID dla Polski
-    const hashtags = trends[0].trends
-      .filter((trend) => trend.name.startsWith("#"))
-      .slice(0, 5) // Wybierz top 5 hashtagów
-      .map((trend) => trend.name);
-    return hashtags.join(" ");
-  } catch (error) {
-    console.error("Error fetching trends:", error);
-    return "#matura #egzaminy #nauka"; // Domyślne hashtagi, jeśli wystąpi błąd
-  }
+async function run() {
+  // For text-only input, use the gemini-pro model
+  const model = genAI.getGenerativeModel({
+    model: "gemini-pro",
+    generationConfig,
+  });
+
+  // Write your prompt here
+  const prompt =
+    "Purpose: The bot should generate short, engaging, and actionable content for social media platforms like Discord announcements or Twitter. The content can promote a Discord server or share valuable advice, tips, or resources in an engaging manner.
+
+Tone: The tone should be conversational, helpful, and slightly persuasive to encourage clicks or engagement. Content should be concise and attention-grabbing.
+
+Examples of Content:
+
+Discord Promotion Example:
+"Dołącz do naszego Discorda i zyskaj dostęp do najnowszych przecieków maturalnych. Materiały, które mogą Ci pomóc na maturze. Arkusze z matematyki już są: https://discord.gg/NKtRwQDp"
+
+Web Development Tips Example:
+"🎯 Tip of the Day: Use :has() in CSS for parent-child selection. Need a parent to react when a child is checked? This game-changer is now supported in most modern browsers. Test it out! More tricks? Join us: https://discord.gg/NKtRwQDp"
+
+Content for Students Example:
+"📚 Twoja matura to nie loteria – to strategia! Poznaj metody skutecznej nauki, podziel się materiałami i przygotuj się na sukces razem z nami. Dołącz: https://discord.gg/NKtRwQDp"
+
+Web Development Unique Advice:
+"💻 Think HTML is boring? Think again. You can create dynamic, data-driven UIs using custom attributes and data-* with JavaScript. It's lightweight, flexible, and perfect for interactive projects. For more hacks, join: https://discord.gg/NKtRwQDp"
+
+How It Works:
+
+Use the provided Discord link consistently: https://discord.gg/NKtRwQDp.
+Keep sentences concise, below 280 characters for Twitter compatibility.
+Alternate between promotional content, educational advice, and engaging tips.
+  say it only in polish language";
+
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+  console.log(text);
+  sendTweet(text);
 }
 
-// Funkcja generująca treść tweeta
-async function generateTweet() {
-  try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-pro",
-      generationConfig,
-    });
+run();
 
-    const prompt = `
-      Write a tweet in the style of:
-      "Dołącz do naszego Discorda i zyskaj dostęp do najnowszych przecieków maturalnych. Materiały, które mogą Ci pomóc na maturze. Arkusze z matematyki już są: https://discord.gg/NKtRwQDp". 
-      Use varied language to keep it fresh, but keep the link and polish context.`;
-    
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text().trim();
-
-    // Dodaj hashtagi
-    const hashtags = await getTrendingHashtags();
-    return `${text} ${hashtags}`;
-  } catch (error) {
-    console.error("Error generating tweet:", error);
-    return "Dołącz do naszego Discorda i zyskaj dostęp do najnowszych przecieków maturalnych. Materiały, które mogą Ci pomóc na maturze. Arkusze z matematyki już są: https://discord.gg/NKtRwQDp #matura #egzaminy #nauka";
-  }
-}
-
-// Funkcja wysyłająca tweeta
 async function sendTweet(tweetText) {
   try {
     await twitterClient.v2.tweet(tweetText);
@@ -66,10 +67,3 @@ async function sendTweet(tweetText) {
     console.error("Error sending tweet:", error);
   }
 }
-
-// Uruchomienie bota
-(async function run() {
-  const tweetText = await generateTweet();
-  console.log("Generated Tweet:", tweetText);
-  await sendTweet(tweetText);
-})();
