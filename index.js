@@ -10,16 +10,30 @@ const generationConfig = {
   maxOutputTokens: 400,};
 const genAI = new GenAI.GoogleGenerativeAI(SECRETS.GEMINI_API_KEY);
 async function run() {
-  // For text-only input, use the gemini-pro model
   const model = genAI.getGenerativeModel({
     model: "gemini-pro",
-    generationConfig,});
-  const prompt = "Stwórz chwytliwe i krótkie zdanie promujące Discorda dla maturzystów. Skup się na zachęceniu do dołączenia, podkreślając dostęp do materiałów, arkuszy i wsparcia przed maturą. Dodaj link: https://discord.gg/NKtRwQDp.";
+    generationConfig,
+  });
+
+  const prompt =
+    "Stwórz chwytliwe i krótkie zdanie promujące Discorda dla maturzystów. Skup się na zachęceniu do dołączenia, podkreślając dostęp do materiałów, arkuszy i wsparcia przed maturą. Dodaj link: https://discord.gg/NKtRwQDp.";
   const result = await model.generateContent(prompt);
   const response = await result.response;
   const text = response.text();
-  console.log(text);
-  sendTweet(text);}
+
+  // Pobierz najpopularniejsze hashtagi
+  const trendingHashtags = await getTwitterTrends(); // Lub `scrapeTrendingHashtags()`
+  const hashtags = trendingHashtags.join(" ");
+  let tweetText = `${text}\n\n${hashtags}`;
+
+  if (tweetText.length > 280) {
+    tweetText = `${text.substring(0, 280 - hashtags.length - 3)}...\n\n${hashtags}`;
+  }
+
+  console.log(tweetText);
+  sendTweet(tweetText);
+}
+}
 run();
 async function sendTweet(tweetText) { try {
     await twitterClient.v2.tweet(tweetText);
