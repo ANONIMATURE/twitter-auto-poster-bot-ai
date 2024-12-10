@@ -30,7 +30,7 @@ async function run() {
     const text = response.text();
 
     // Domyślne hashtagi (opcjonalnie możesz pobrać dynamicznie)
-    const popularHashtags = ["#Matura2025", "#Egzamin", "#Nauka", "#CKE", "#Przecieki"];
+    const popularHashtags = ["#Matura2025", "#Wczoraj", "#Stuhr", "#CKE", "#Przecieki"];
     const hashtags = popularHashtags.join(" ");
 
     // Tworzenie tweeta
