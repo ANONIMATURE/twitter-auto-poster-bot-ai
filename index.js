@@ -25,7 +25,7 @@ async function run() {
 
   // Write your prompt here
   const prompt =
-      "Stwórz chwytliwe i krótkie zdanie promujące Discorda dla maturzystów. Skup się na zachęceniu do dołączenia, podkreślając dostęp do materiałów, przecieków arkuszy i wsparcia przed maturą. Dodaj link: https://discord.gg/NKtRwQDp. mogą też być # typu "#Matura2025", "#Matematyka", "#LGBT", "#Debata", "#Przecieki"] poniżej 280 znaków ;
+      "Stwórz chwytliwe i krótkie zdanie promujące Discorda dla maturzystów. Skup się na zachęceniu do dołączenia, podkreślając dostęp do materiałów, przecieków arkuszy i wsparcia przed maturą. Dodaj link: https://discord.gg/NKtRwQDp. mogą też być # typu #Matura2025", "#Matematyka", "#LGBT", "#Debata, "#Przecieki"] poniżej 280 znaków ;
 
 
   const result = await model.generateContent(prompt);
