@@ -24,11 +24,12 @@ async function run() {
   });
 
   // Write your prompt here
-  const prompt =
-      "Stwórz chwytliwe i krótkie zdanie promujące Discorda dla maturzystów. Skup się na zachęceniu do dołączenia, podkreślając dostęp do materiałów, przecieków arkuszy i wsparcia przed maturą. Dodaj link: https://discord.gg/NKtRwQDp. mogą też być # typu #Matura2025", "#Matematyka", "#LGBT", "#Debata, "#Przecieki"] poniżej 280 znaków ;
+  const prompt = `Stwórz chwytliwe i krótkie zdanie promujące Discorda dla maturzystów. 
+Skup się na zachęceniu do dołączenia, podkreślając dostęp do materiałów, przecieków arkuszy i wsparcia przed maturą. 
+Dodaj link: https://discord.gg/NKtRwQDp. 
+Mogą też być hashtagi typu #Matura2025, #Matematyka, #LGBT, #Debata, #Przecieki. 
+Ogranicz się do 280 znaków.`;
 
-
-  const result = await model.generateContent(prompt);
   const response = await result.response;
   const text = response.text();
   console.log(text);
