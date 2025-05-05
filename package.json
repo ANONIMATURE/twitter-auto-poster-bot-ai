@@ -1,16 +1,8 @@
 {
-  "name": "automate-twitter-posts-with-ai",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
-  "author": "",
-  "license": "ISC",
+  "type": "module",
   "dependencies": {
-    "@google/generative-ai": "^0.3.1",
-    "twitter-api-v2": "^1.16.1"
+    "@google/generative-ai": "^0.6.15",
+    "dotenv": "^16.4.5",
+    "twitter-api-v2": "^1.18.0"
   }
 }
