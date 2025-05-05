@@ -25,7 +25,8 @@ async function run() {
 
   // Write your prompt here
   const prompt =
-    "generate a web development content, tips and tricks or something new or some rant or some advice as a tweet, it should not be vague and should be unique; under 280 characters and should be plain text, you can use emojis";
+      "Stwórz chwytliwe i krótkie zdanie promujące Discorda dla maturzystów. Skup się na zachęceniu do dołączenia, podkreślając dostęp do materiałów, przecieków arkuszy i wsparcia przed maturą. Dodaj link: https://discord.gg/NKtRwQDp. mogą też być # typu "#Matura2025", "#Matematyka", "#LGBT", "#Debata", "#Przecieki"] poniżej 280 znaków ;
+
 
   const result = await model.generateContent(prompt);
   const response = await result.response;
